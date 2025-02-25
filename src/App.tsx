@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import Header from "@/components/Header"; // Import the newly created Header component
 
 function App() {
-  const links = [
+  const Links = [
     { name: "Home", href: "#" },
     { name: "Features", href: "#" },
     { name: "Pricing", href: "#" },
