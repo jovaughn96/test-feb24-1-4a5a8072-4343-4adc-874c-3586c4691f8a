@@ -1,10 +1,12 @@
-
-import { Button } from "@/components/ui/button"
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import BouncingBalls from '@/components/BouncingBalls';
 
 function App() {
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-background flex items-center justify-center relative overflow-hidden">
+      <BouncingBalls ></BouncingBalls>
+      <div className="container mx-auto px-4 py-8 z-10">
         <h1 className="text-4xl font-bold text-center mb-8">
           Welcome to Your New Project
         </h1>
@@ -14,7 +16,7 @@ function App() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
