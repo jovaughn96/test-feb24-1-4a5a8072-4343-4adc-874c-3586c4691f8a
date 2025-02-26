@@ -1,0 +1,12 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
+  "plugins": ["react"],
+  "rules": {
+    "react/jsx-uses-react": "off",  // not needed in new JSX transform
+    "react/react-in-jsx-scope": "off", // also not needed in new JSX transform
+    "no-unused-vars": ["error", { "varsIgnorePattern": "React" }]
+  }
+}
