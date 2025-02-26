@@ -1,30 +1,26 @@
-import React from 'react';
-// Import matter.js and setup Matter.js world and runner here
-import { useEffect, useRef } from 'react';
-import Matter from 'matter-js';
+import React, { useState, useEffect } from 'react';
 
 const BouncingBalls = () => {
-  const CanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [color, setColor] = useState('blue'); // Initial color
 
   useEffect(() => {
-    const Engine = Matter.Engine.create();
-    const Render = Matter.Render.create({
-      element: CanvasRef.current!,
-      Engine: Engine,
-    });
-
-    const Ball = Matter.Bodies.circle(400, 200, 20);
-    Matter.World.add(Engine.world, [Ball]);
-
-    Matter.Engine.run(Engine);
-    Matter.Render.run(Render);
-
-    return () => {
-      Matter.Render.stop(Render);
+    const ChangeColor = () => {
+      setColor(`hsl(${Math.random() * 360}, 100%, 50%)`); // Random color on ball hit
     };
-  }, []);
 
-  return <canvas ref={CanvasRef} width={800} height={600}></canvas>;
+    // Assuming there's logic to detect wall hits
+    const WallHit = true; // This should be your actual collision detection logic
+    if (WallHit) {
+      ChangeColor();
+    }
+
+  }, [/* dependencies for wall hit detection */]);
+
+  return (
+    <div style={{ backgroundColor: color, width: '50px', height: '50px', borderRadius: '50%' }}>
+      {/* Ball's UI here */}
+    </div>
+  );
 };
 
 export default BouncingBalls;
