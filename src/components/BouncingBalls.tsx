@@ -1,57 +1,52 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const BouncingBalls = () => {
-  const [balls, setBalls] = useState([
-    { id: 1, x: 50, y: 50, dx: 2, dy: 2 },
-    { id: 2, x: 100, y: 100, dx: -2, dy: 2 }
-  ]);
-  const ContainerRef = useRef<HTMLDivElement>(null);
+const BouncingBalls: React.FC = () => {
+  const [balls, setBalls] = useState<{ x: number; y: number; dx: number; dy: number }[]>([]);
 
   useEffect(() => {
-    const Interval = setInterval(() => {
-      setBalls((prevBalls) =>
-        prevBalls.map((ball) => {
-          let newX = ball.x + ball.dx;
-          let newY = ball.y + ball.dy;
-
-          // Bounce off the walls
-          if (newX < 0 || newX > (ContainerRef.current?.clientWidth || 0)) {
-            ball.dx *= -1;
-          }
-          if (newY < 0 || newY > (ContainerRef.current?.clientHeight || 0)) {
-            ball.dy *= -1;
-          }
-
-          return { ...ball, x: newX, y: newY };
-        })
-      );
-    }, 16);
-
-    return () => clearInterval(Interval);
+    const NewBalls = Array.from({ length: 5 }, () => ({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      dx: (Math.random() - 0.5) * 4,
+      dy: (Math.random() - 0.5) * 4,
+    }));
+    setBalls(NewBalls);
   }, []);
 
-  const HandleClick = (id: number) => {
-    setBalls((prevBalls) =>
-      prevBalls.filter((ball) => ball.id !== id)
-    );
-  };
+  useEffect(() => {
+    const Animate = () => {
+      setBalls((prevBalls) =>
+        prevBalls.map(ball => {
+          const NewX = ball.x + ball.dx;
+          const NewY = ball.y + ball.dy;
+
+          if (NewX < 0 || NewX > window.innerWidth) ball.dx *= -1;
+          if (NewY < 0 || NewY > window.innerHeight) ball.dy *= -1;
+
+          return { ...ball, x: NewX, y: NewY };
+        })
+      );
+      requestAnimationFrame(Animate);
+    };
+    Animate();
+  }, []);
 
   return (
-    <div ref={ContainerRef} className="relative w-full h-full">
-      {balls.map((ball) => (
+    <div>
+      {balls.map((ball, index) => (
         <div
-          key={ball.id}
-          onClick={() => HandleClick(ball.id)}
+          key={index}
           style={{
             position: 'absolute',
-            left: ball.x,
             top: ball.y,
-            width: 30,
-            height: 30,
-            borderRadius: '50%',
+            left: ball.x,
+            width: '50px',
+            height: '50px',
             backgroundColor: 'red',
-            cursor: 'pointer'
+            borderRadius: '50%',
+            cursor: 'pointer',
           }}
+          onClick={() => alert(`Ball ${index + 1} clicked!`)}
         />
       ))}
     </div>
