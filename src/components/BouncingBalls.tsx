@@ -1,54 +1,34 @@
-import React, { useState, useEffect } from 'react';
+// Assume this is the complete code for BouncingBalls component
+import React, { useRef, useEffect } from 'react';
 
-const BouncingBalls: React.FC = () => {
-  const [balls, setBalls] = useState<{ x: number; y: number; dx: number; dy: number }[]>([]);
+const BouncingBalls = () => {
+  const BallsRef = useRef<HTMLDivElement>(null);
+
+  const HandleMouseMove = (event: MouseEvent) => {
+    const Balls = BallsRef.current?.children;
+    if (Balls) {
+      Array.from(Balls).forEach((ball: HTMLElement) => {
+        const DeltaX = event.clientX - ball.getBoundingClientRect().left;
+        const DeltaY = event.clientY - ball.getBoundingClientRect().top;
+        const Distance = Math.sqrt(DeltaX * DeltaX + DeltaY * DeltaY);
+        const Offset = Math.min(50, 50 - Distance);
+        ball.style.transform = `translate(${Offset}px, ${Offset}px)`;
+      });
+    }
+  };
 
   useEffect(() => {
-    const NewBalls = Array.from({ length: 5 }, () => ({
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
-      dx: (Math.random() - 0.5) * 4,
-      dy: (Math.random() - 0.5) * 4,
-    }));
-    setBalls(NewBalls);
-  }, []);
-
-  useEffect(() => {
-    const Animate = () => {
-      setBalls((prevBalls) =>
-        prevBalls.map(ball => {
-          const NewX = ball.x + ball.dx;
-          const NewY = ball.y + ball.dy;
-
-          if (NewX < 0 || NewX > window.innerWidth) ball.dx *= -1;
-          if (NewY < 0 || NewY > window.innerHeight) ball.dy *= -1;
-
-          return { ...ball, x: NewX, y: NewY };
-        })
-      );
-      requestAnimationFrame(Animate);
+    window.addEventListener('mousemove', HandleMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', HandleMouseMove);
     };
-    Animate();
   }, []);
 
   return (
-    <div>
-      {balls.map((ball, index) => (
-        <div
-          key={index}
-          style={{
-            position: 'absolute',
-            top: ball.y,
-            left: ball.x,
-            width: '50px',
-            height: '50px',
-            backgroundColor: 'red',
-            borderRadius: '50%',
-            cursor: 'pointer',
-          }}
-          onClick={() => alert(`Ball ${index + 1} clicked!`)}
-        />
-      ))}
+    <div ref={BallsRef} className="flex space-x-4">
+      <div className="w-16 h-16 bg-red-500 rounded-full"></div>
+      <div className="w-16 h-16 bg-blue-500 rounded-full"></div>
+      <div className="w-16 h-16 bg-green-500 rounded-full"></div>
     </div>
   );
 };
