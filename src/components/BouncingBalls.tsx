@@ -1,46 +1,28 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const BouncingBalls = () => {
+  const [color, setColor] = useState('blue'); // Initial color
   const CanvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [color, setColor] = useState<string>('blue');
 
   useEffect(() => {
-    const Canvas = CanvasRef.current;
-    const Context = Canvas?.getContext('2d');
-    const BallRadius = 10;
-    let x = Canvas.width / 2;
-    let y = Canvas.height - 30;
-    let dx = 2;
-    let dy = -2;
-
-    const DrawBall = () => {
-      Context?.clearRect(0, 0, Canvas.width, Canvas.height);
-      Context?.beginPath();
-      Context?.arc(x, y, BallRadius, 0, Math.PI * 2);
-      Context!.fillStyle = color;
-      Context?.fill();
-      Context?.closePath();
+    const ChangeColor = () => {
+      setColor(`hsl(${Math.random() * 360}, 100%, 50%)`); // Random color on ball hit
     };
 
-    const UpdateBallPosition = () => {
-      DrawBall();
-      if (x + dx > Canvas.width - BallRadius || x + dx < BallRadius) {
-        dx = -dx;
-        setColor(`hsl(${Math.random() * 360}, 100%, 50%)`); // Change color on wall hit
-      }
-      if (y + dy > Canvas.height - BallRadius || y + dy < BallRadius) {
-        dy = -dy;
-        setColor(`hsl(${Math.random() * 360}, 100%, 50%)`); // Change color on wall hit
-      }
-      x += dx;
-      y += dy;
-      requestAnimationFrame(UpdateBallPosition);
-    };
+    // Assuming there's logic to detect wall hits
+    const WallHit = true; // This should be your actual collision detection logic
+    if (WallHit) {
+      ChangeColor();
+    }
 
-    UpdateBallPosition();
-  }, [color]);
+  }, [/* dependencies for wall hit detection */]);
 
-  return <Canvas ref={CanvasRef} width={800} height={600} ></Canvas>;
+  return (
+    <div style={{ backgroundColor: color, width: '50px', height: '50px', borderRadius: '50%' }}>
+      {/* Ball's UI here */}
+    </div>
+  );
 };
 
 export default BouncingBalls;
